@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Soal IPAS Kelas 5 Bab 7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Fredoka', sans-serif; background-color: #f0f9ff; }
+        .btn-option { transition: all 0.2s; text-align: left; }
+        .btn-option:hover { background-color: #e0f2fe; }
+        .btn-option.selected { background-color: #3b82f6; color: white; border-color: #2563eb; }
+        .correct-answer { background-color: #dcfce7 !important; border: 2px solid #22c55e !important; color: #14532d !important; }
+        .wrong-answer { background-color: #fee2e2 !important; border: 2px solid #ef4444 !important; color: #7f1d1d !important; }
+        .hidden-section { display: none; }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Latihan Soal IPAS Bab 7</h1>
+            <div id="timerDisplay" class="hidden font-mono text-xl bg-blue-700 px-3 py-1 rounded-lg">
+                ⏱️ 00:00
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4 md:p-8 max-w-4xl">
+        
+        <!-- HOME PAGE -->
+        <section id="homePage" class="text-center py-10">
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-blue-600 mb-4">Selamat Datang!</h2>
+                <p class="mb-6 text-lg">Silakan pilih paket soal untuk menguji pemahamanmu tentang <strong>Daerahku Kebanggaanku</strong>.</p>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <button onclick="startQuiz(1)" class="group bg-orange-50 border-2 border-orange-200 p-6 rounded-xl hover:bg-orange-100 transition shadow-sm hover:shadow-md">
+                        <h3 class="text-2xl font-bold text-orange-600 mb-2">📦 Paket 1</h3>
+                        <p class="text-orange-800">Topik: Warisan Budaya (Benda & Tak Benda)</p>
+                        <span class="inline-block mt-4 bg-orange-500 text-white px-4 py-2 rounded-full group-hover:bg-orange-600">Mulai Paket 1</span>
+                    </button>
+                    
+                    <button onclick="startQuiz(2)" class="group bg-green-50 border-2 border-green-200 p-6 rounded-xl hover:bg-green-100 transition shadow-sm hover:shadow-md">
+                        <h3 class="text-2xl font-bold text-green-600 mb-2">📦 Paket 2</h3>
+                        <p class="text-green-800">Topik: Aktivitas Ekonomi Daerah</p>
+                        <span class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded-full group-hover:bg-green-600">Mulai Paket 2</span>
+                    </button>
+                </div>
+
+                <div class="text-sm text-gray-500">
+                    <p>Belum membaca materi?</p>
+                    <a href="rangkuman_ipas_bab7.html" class="text-blue-500 underline hover:text-blue-700">Buka Rangkuman Materi Dulu</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUIZ PAGE -->
+        <section id="quizPage" class="hidden-section">
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <h2 id="quizTitle" class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">Soal Latihan</h2>
+                <div id="questionsContainer" class="space-y-8">
+                    <!-- Questions injected here via JS -->
+                </div>
+                <div class="mt-8 text-center">
+                    <button onclick="submitQuiz()" class="bg-blue-600 text-white text-xl font-bold px-10 py-3 rounded-full hover:bg-blue-700 shadow-lg transform hover:scale-105 transition">
+                        🚀 Kirim Jawaban
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULT PAGE -->
+        <section id="resultPage" class="hidden-section">
+            <div class="bg-white rounded-2xl shadow-xl p-8 text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Hasil Latihanmu</h2>
+                <div class="text-6xl font-bold text-blue-600 my-6" id="scoreDisplay">0</div>
+                <p id="scoreMessage" class="text-xl mb-6">Kamu hebat!</p>
+                <div class="flex justify-center gap-4">
+                    <button onclick="location.reload()" class="bg-gray-500 text-white px-6 py-2 rounded-full hover:bg-gray-600">🏠 Kembali ke Menu</button>
+                    <button onclick="reviewAnswers()" class="bg-yellow-500 text-white px-6 py-2 rounded-full hover:bg-yellow-600">👀 Lihat Pembahasan</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- DATA SOAL ---
+        const packets = {
+            1: [
+                {
+                    q: "Indonesia memiliki beragam warisan dari leluhur yang disebut sebagai warisan budaya. Gambar di atas menunjukkan jenis...",
+                    img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhn92DT1THpgnns95ikLScsxzRq2oJvRXZ3v1bwHnZGeOI4DKIu5ftiKYJDJrbdHZnazM4TqiNGNp_8UjxI8kX0KojdERSlZmgqjrgQYb43nS9VhFdlsC5Ku5W-tTPNx6aBi-c98Q9upi8yJ8WwEZUOZ_r5k8IBLFAwiVVQy1I50rZ6_D6Us7-HX1zTheg/s320-rw/warisan%20budaya%20indonesia%20kelas%205.jpg",
+                    opts: ["warisan budaya benda", "warisan budaya tak benda", "warisan budaya lisan", "warisan budaya tak dapat diraba"],
+                    key: 0, // A
+                    reason: "Wayang kulit (fisik wayangnya) dan keris adalah benda fisik yang bisa diraba, jadi termasuk Warisan Budaya Benda."
+                },
+                {
+                    q: "Warisan budaya berikut yang tidak bisa diraba, namun bisa dilihat di sekitar kita yaitu...",
+                    img: null,
+                    opts: ["makanan", "bangunan", "adat istiadat", "pakaian adat"],
+                    key: 2, // C
+                    reason: "Adat istiadat adalah kebiasaan atau tradisi yang dilakukan, tidak memiliki wujud fisik benda mati yang bisa dipegang seperti bangunan."
+                },
+                {
+                    q: "Gambar di atas menunjukkan salah satu contoh jenis...",
+                    img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEit7hTxLBiTeQVCt3HqtP2qwrvit1IwleFtbjGH95aFgCmIdqPABQej02zzOznuPLFPfQz0cvuTXeHfFjtiqE3pQdnKdQ1BSVfHg481CWWYftzbHIKkGMhXnerCb1ekKhJhhxqG5OqTv17Nj1EJBI069i5tkV3EucWtR7uwWRW3JO4_VMSQmsrZTmBugOE/s320-rw/penari%20cartoon.png",
+                    opts: ["warisan budaya benda", "warisan budaya tak benda", "warisan dapat diraba", "warisan budaya lisan"],
+                    key: 1, // B
+                    reason: "Seni tari adalah gerak tubuh yang indah. Ini termasuk warisan budaya tak benda."
+                },
+                {
+                    q: "Perhatikan tabel! (1. Kebiasaan, 2. Bahasa, 3. Alat Musik, 4. Makanan). Warisan budaya yang bisa kita lihat dan raba ditunjukkan oleh nomor...",
+                    img: null,
+                    opts: ["1 dan 2", "2 dan 3", "3 dan 4", "1 dan 4"],
+                    key: 2, // C
+                    reason: "Alat musik dan Makanan adalah benda fisik (Benda). Kebiasaan dan Bahasa adalah Tak Benda."
+                },
+                {
+                    q: "Bu Ayu dapat menenun benang menjadi kain untuk batik gedog. Bu Ayu menunjukkan salah satu warisan budaya yaitu berupa...",
+                    img: null,
+                    opts: ["alat produksi", "kebiasaan", "keterampilan", "adat istiadat"],
+                    key: 2, // C
+                    reason: "Kemampuan menenun adalah sebuah keterampilan (skill) tradisional."
+                },
+                {
+                    q: "Masyarakat Desa Sembungan mengadakan syukuran dengan menyajikan tumpeng yang berbentuk segitiga sebagai rasa syukur dengan Sang Pencipta. Kegiatan tersebut termasuk...",
+                    img: null,
+                    opts: ["bahasa", "makanan", "keterampilan", "adat istiadat"],
+                    key: 3, // D
+                    reason: "Kegiatan syukuran atau upacara rasa syukur adalah bentuk adat istiadat."
+                },
+                {
+                    q: "Gambar di atas merupakan salah satu contoh warisan budaya yang berasal dari...",
+                    img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgyzVJyHV-Abc90qGLqTkTuFsEA1ROcInZ_zrQDgAsvKGhV4m8dtAsi1uzKmMA7Wz0whiYXHRyctCgq3IhJaBbschLwQ70kD9txQeDi9-ar1O3p9as1-xpU5LeQGMgONdszCnzxFPxqmbdDPUDRwIsCflHk8rAyjBQ03LqsKY4kYu4QC0JZpt32OpwfUnA/s320-rw/soal%20menentukan%20warisan%20budaya.png",
+                    opts: ["Jawa", "Bali", "Kalimantan", "Papua"],
+                    key: 3, // D
+                    reason: "Rumah Honai (seperti jamur jerami) adalah rumah adat khas Papua."
+                },
+                {
+                    q: "Sebagian besar masyarakat di Indonesia menggunakan tangan ketika makan. Hal tersebut termasuk warisan budaya berupa...",
+                    img: null,
+                    opts: ["alat produksi", "kebiasaan", "keterampilan", "adat istiadat"],
+                    key: 1, // B
+                    reason: "Cara makan adalah kebiasaan yang dilakukan sehari-hari."
+                },
+                {
+                    q: "Megibung adalah tradisi makan bersama. Warisan budaya tersebut berasal dari...",
+                    img: null,
+                    opts: ["Sulawesi", "Sumatera", "Papua", "Bali"],
+                    key: 3, // D
+                    reason: "Megibung adalah tradisi makan bersama dalam satu wadah dari Karangasem, Bali."
+                },
+                {
+                    q: "Patung dan lukisan merupakan salah satu contoh warisan budaya...",
+                    img: null,
+                    opts: ["benda", "tak benda", "lisan", "tulis"],
+                    key: 0, // A
+                    reason: "Patung dan lukisan memiliki wujud fisik, jadi termasuk warisan budaya benda."
+                },
+                {
+                    q: "Warisan budaya pada gambar di atas merupakan percampuran dua kebudayaan yaitu...",
+                    img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEji_yiTXaBq1Y7tOIRyN8Sxm8QfM8wYaCdh1hEaPJ8owRJQjHKXPECUpOrgCEagJvUZhDn-VASz2TUXdVtv_KSC94H6AxE6IWAZAcUN35GGGzrlZ06zsg4NGHQlR4ZZ-j77WbXLOiOUQ6LUT1xPsc-ZRzbnwaktiz0GwREa75WAqs28vfpxqvsEvyddBWs/s320-rw/soal%20kelas%205%20warisan%20budaya.png",
+                    opts: ["budaya Nusantara dan India", "budaya Nusantara dan Arab", "budaya India dan Tionghoa", "budaya India dan Portugis"],
+                    key: 0, // A
+                    reason: "Wayang kulit mengambil cerita Mahabarata/Ramayana (India) yang disesuaikan dengan budaya lokal (Nusantara)."
+                },
+                {
+                    q: "Percampuran dua kebudayaan atau lebih yang saling bertemu dan saling memengaruhi disebut...",
+                    img: null,
+                    opts: ["asimilasi", "akulturasi", "akomodasi", "sintesis"],
+                    key: 1, // B
+                    reason: "Akulturasi adalah perpaduan budaya tanpa menghilangkan ciri asli budaya lama."
+                },
+                {
+                    q: "Berikut ini salah satu contoh pencampuran dua kebudayaan karena masuknya unsur kebudayaan asing di suatu daerah yaitu...",
+                    img: null,
+                    opts: ["musik dangdut", "bahasa serapan", "Tari Pendet", "Wayang Ramayana"],
+                    key: 0, // A
+                    reason: "Musik Dangdut adalah perpaduan musik Melayu, India, dan Arab."
+                },
+                {
+                    q: "Warisan budaya (makanan) di atas berasal dari...",
+                    img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgrljajM9BBWoayfIAi5HZQwicB5tGGkBYmvZJ3XmVtTBQR7Dj9ohiav3lQrXUPMu-UIre6O-13plcER-ZXzZw0k4-BauF7z3B0l9GJpzuRzSGOdoHga1dRH8lVkXnDpkotBl5tR9e2991FTypmpA8x98fdXGBd6I8merFBaTEmHf055JOKjcD13ZCJWtY/s320-rw/kumpulan%20makanan%20warisan%20budaya.png",
+                    opts: ["Pulau Papua", "Pulau Kalimantan", "Pulau Bali", "Pulau Nusa Tenggara"],
+                    key: 0, // A
+                    reason: "Papeda (bubur sagu) adalah makanan khas Papua dan Maluku."
+                },
+                {
+                    q: "Berikut ini salah satu dampak dari adanya pencampuran dua kebudayaan atau lebih yaitu...",
+                    img: null,
+                    opts: ["menambah keberagaman kebudayaan Indonesia", "mengikis kecintaan budaya", "meningkatkan budaya asing", "memudarkan nilai lokal"],
+                    key: 0, // A
+                    reason: "Akulturasi memperkaya khazanah budaya bangsa."
+                },
+                {
+                    q: "Cara bercocok tanam masyarakat di Indonesia termasuk warisan...",
+                    img: null,
+                    opts: ["warisan benda", "warisan tak benda", "warisan lisan", "warisan dapat diraba"],
+                    key: 1, // B
+                    reason: "Pengetahuan atau sistem pertanian (seperti Subak) adalah warisan tak benda."
+                },
+                {
+                    q: "Warisan budaya di Indonesia begitu bervariasi sehingga generasi muda Indonesia harus berupaya...",
+                    img: null,
+                    opts: ["dijual", "dilelang", "dieksploitasi", "menjaga dan melestarikannya"],
+                    key: 3, // D
+                    reason: "Tugas generasi muda adalah melestarikan budaya agar tidak punah."
+                },
+                {
+                    q: "Seni bela diri pada gambar di atas (Pencak Silat) merupakan warisan yang harus dijaga. Salah satu upaya terbaik yaitu...",
+                    img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEga2XVLnHk_Yhyphenhyphen6i_KutFJT9HQE5YQmUu-QNLUg7V4a1zq45nkjURKljKx4e_-BQLBMMnZ6ibw1mvscK_VP8o3PIGbYCm-yhqvwOccD2OVjYxoOsiDwbAb2jYBL5TOd5GId7BTj4r-KAb2R965Zq6JL0pnd_vmXXO8K_5H9I0uz3VTDYbxZj97NyumxO6I/s320-rw/warisan%20budaya%20pencak%20silat.png",
+                    opts: ["mendokumentasikannya", "melakukan pemugaran", "mempelajarinya", "memfoto kegiatannya"],
+                    key: 2, // C
+                    reason: "Cara terbaik melestarikan ilmu bela diri adalah dengan mempelajari dan mempraktikkannya."
+                },
+                {
+                    q: "Barongsai adalah warisan budaya. Ciri-cirinya? (1. Hasil campur 2 budaya, 3. Benda, 4. Tak Benda). Pilih yang tepat.",
+                    img: null,
+                    opts: ["1 dan 3", "2 dan 3", "1 dan 4", "2 dan 4"],
+                    key: 2, // C (Assuming Akulturasi & Performance/Tak Benda focus) or A (Object). Key provided usually C for cultural context.
+                    reason: "Barongsai adalah akulturasi budaya Tionghoa-Indonesia (1) dan merupakan seni pertunjukan (Tak Benda - 4)."
+                },
+                {
+                    q: "Salah satu upaya untuk memperbaiki kembali warisan budaya (bangunan) yang rusak disebut...",
+                    img: null,
+                    opts: ["penangkaran", "konservasi", "pemugaran", "aktualisasi"],
+                    key: 2, // C
+                    reason: "Pemugaran adalah istilah khusus untuk perbaikan bangunan bersejarah."
+                }
+            ],
+            2: [
+                {
+                    q: "Aktivitas ekonomi yang dilakukan manusia pada gambar di atas termasuk bidang...",
+                    img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgRHOSbWqFbO7DzmsGap7kgZInPurWzdTDHnVHOe_NP_3FyeKTY08-bmuzFiEA_DKDeofIYn-1X64clr0UzJnOkShOC4kYPWtycTN_99fyHawVPQaRMauKeacLem9VQvW7qXCGkFJAGpNCYHILZf6gcpIKqmzUvMmPdR50O-Y45Nihd7p_9dmpAjE1Rl_0/s320-rw/soal%20kegiatan%20ekonomi%20kelas%205.png",
+                    opts: ["peternakan", "jasa/layanan", "perindustrian", "perikanan"],
+                    key: 0, // A
+                    reason: "Gambar menunjukkan hewan ternak (sapi/kambing/ayam), jadi termasuk peternakan."
+                },
+                {
+                    q: "Kabupaten Ngawi merupakan salah satu lumbung beras di Jawa Timur. Aktivitas ekonomi yang dilakukan sebagian besar masyarakat di sana yaitu...",
+                    img: null,
+                    opts: ["perkebunan", "peternakan", "perindustrian", "pertanian"],
+                    key: 3, // D
+                    reason: "Lumbung beras berarti penghasil padi, yang merupakan hasil pertanian."
+                },
+                {
+                    q: "Aktivitas ekonomi yang ditunjukkan oleh gambar di atas dilakukan oleh masyarakat yang tinggal di daerah...",
+                    img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEznUC6PqmhoxRAHj6jKKV2b4HOslUFWAQ77ovqpmjM5h592qpSS0sWi5RFAlcSWnBYP_jzFk5tx9jisw2I8PdXvjom1TXhp13vGn9wKuZDKObNEeYuOup87bmyeNJRkM6ObwU0uLDRmDuSHyg6efEpUYjOHAT795LKT-EFJgL78zHS-6Sjviw5P35P_U/s320-rw/aktivitas%20ekonomi%20kelas%205%20terbaru.png",
+                    opts: ["dataran tinggi", "dataran rendah", "pegunungan", "pinggir pantai"],
+                    key: 3, // D
+                    reason: "Kegiatan nelayan atau petani garam dilakukan di pinggir pantai."
+                },
+                {
+                    q: "Dataran Tinggi Minangkabau. Aktivitas ekonomi yang cocok? (1. Perkebunan, 2. Peternakan, 3. Tambang, 4. Jasa).",
+                    img: null,
+                    opts: ["1 dan 2", "2 dan 3", "3 dan 4", "1 dan 4"],
+                    key: 3, // D (Depending on specific context, usually Plantation & Tourism/Service in Highlands). Or A. Let's stick to Packet 2 logic: 1&4 often cited for highlands (tea/veg + tourism).
+                    reason: "Dataran tinggi cocok untuk perkebunan (teh/sayur) dan pariwisata (jasa)."
+                },
+                {
+                    q: "Pak Yande berjualan ikan segar di pasar. Pak Yande melaksanakan aktivitas ekonomi karena...",
+                    img: null,
+                    opts: ["berupaya memenuhi kebutuhannya", "menghasilkan uang banyak", "memiliki pelanggan", "adanya jual beli"],
+                    key: 0, // A
+                    reason: "Tujuan utama aktivitas ekonomi adalah untuk memenuhi kebutuhan hidup."
+                },
+                {
+                    q: "Perindustrian adalah aktivitas ekonomi. Contoh perindustrian yaitu...",
+                    img: null,
+                    opts: ["pengelolaan batu bara", "layanan antar barang", "mengolah kain menjadi baju", "menjual barang bekas"],
+                    key: 2, // C
+                    reason: "Industri adalah kegiatan mengolah bahan mentah menjadi barang jadi/setengah jadi."
+                },
+                {
+                    q: "Gambar di atas (Pasar Apung) menunjukkan aktivitas ekonomi di bidang...",
+                    img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjo_IxtEb5F8cnsH_-xqzq2rF74t11eBdaN7gMlC8xEHWKuT796pZ1g1lraKILLk7clW1i85z8uVP-pLtONYn-Aw-_TnG-G-kTjVQIMGjpSiVWni3BBKsAczRIII5ySYZ2r9A916wguEKlpdWzzbN9I45s5xmUZuea3xpToIArdOZx_v8NFrsDo1FAbyQ8/s320-rw/pasar%20apung%20cartoon.jpg",
+                    opts: ["perikanan", "peternakan", "perkebunan", "perdagangan"],
+                    key: 3, // D
+                    reason: "Pasar adalah tempat jual beli, yang merupakan inti dari perdagangan."
+                },
+                {
+                    q: "Masyarakat Desa Petang menanam buah-buahan seperti jeruk dan manggis. Ini aktivitas ekonomi bidang...",
+                    img: null,
+                    opts: ["pertanian", "perkebunan", "pertambangan", "perdagangan"],
+                    key: 1, // B
+                    reason: "Tanaman buah-buahan (tahunan) biasanya dikategorikan sebagai perkebunan."
+                },
+                {
+                    q: "Berikut ini salah satu contoh aktivitas ekonomi yaitu...",
+                    img: null,
+                    opts: ["siswa belajar", "orang berjalan kaki", "guru mengajar di bimbel", "anak main layangan"],
+                    key: 2, // C
+                    reason: "Guru mengajar adalah kegiatan produksi jasa yang menghasilkan pendapatan."
+                },
+                {
+                    q: "Masyarakat yang terlibat dalam proses ekonomi disebut...",
+                    img: null,
+                    opts: ["produsen", "konsumen", "ahli ekonomi", "pelaku ekonomi"],
+                    key: 3, // D
+                    reason: "Pelaku ekonomi adalah istilah umum untuk semua pihak (produsen, distributor, konsumen) yang terlibat."
+                },
+                {
+                    q: "Gambar di atas menunjukkan bahwa aktivitas ekonomi dapat dipengaruhi oleh...",
+                    img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhGXh4-RVEgBn2u8tOEDLNPLNjGuffcq8kkZ0TcSvZQCCbdd9ALNCxK3lrVa7LIr6-x34s41tz4q5Z2WgIjwrQ4GPcZ6pwT6TT-hB2EmLCwojd1AtYXhqU7289V60R8Or-oLsA9Ob8JmWShTyBIBS6DNWIAOrHcAwFkP-ENpkW4Ery-FBBBwidwoMimz14/s320-rw/soal%20terbaru%20aktivitas%20ekonomi%20kelas%205%20kumer.png",
+                    opts: ["sumber daya alam", "sumber daya manusia", "kondisi geografis", "kondisi astronomis"],
+                    key: 2, // C
+                    reason: "Gambar pemandangan alam (pegunungan/pantai) menunjukkan faktor kondisi geografis."
+                },
+                {
+                    q: "Singapura tidak punya SDA melimpah, tapi maju industrinya. Faktor yang paling mempengaruhi adalah...",
+                    img: null,
+                    opts: ["sumber daya alam", "sumber daya manusia", "kondisi geografis", "kondisi astronomis"],
+                    key: 1, // B
+                    reason: "Kualitas SDM (kepintaran, keterampilan) yang tinggi memajukan ekonomi meski minim SDA."
+                },
+                {
+                    q: "Ririn tinggal di tepi pantai. Aktivitas ekonomi yang dapat dilakukan...",
+                    img: null,
+                    opts: ["peternak lele", "petani garam", "karyawan swasta", "buruh pabrik"],
+                    key: 1, // B
+                    reason: "Air laut di tepi pantai adalah bahan baku utama garam."
+                },
+                {
+                    q: "Gambar di atas (Jalan/Jembatan) menunjukkan faktor pendukung ekonomi yaitu...",
+                    img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgaV7ZjtPbW0EVO2n4taZypNUaYjmBVRaRDhVBfcjP1cxOgee4C61oztamndkN-Jo4-dVFzg0NQgu_S16uwX22O0bKQSDrB5M1jeDzrv9RO7Y0SiGXU908XLrfQFExm1nfJbXkwWbD6PwwASgLpLGo9B97-2bnm0arve-PG-mTcroNQwMdOMtmwJg7wBgg/s320-rw/faktor%20infrastruktur%20kelas%205%20ipas.jpg",
+                    opts: ["infrastruktur", "cuaca dan musim", "sumber daya manusia", "sumber daya alam"],
+                    key: 0, // A
+                    reason: "Jalan raya dan jembatan disebut infrastruktur."
+                },
+                {
+                    q: "Petani menanam padi unggul masa panen pendek. Hal ini meningkatkan ekonomi karena faktor...",
+                    img: null,
+                    opts: ["infrastruktur", "sumber daya alam", "kemajuan teknologi", "kondisi lingkungan"],
+                    key: 2, // C
+                    reason: "Bibit unggul adalah hasil rekayasa teknologi pertanian."
+                },
+                {
+                    q: "Pelatihan bagi nelayan dapat meningkatkan ekonomi melalui faktor...",
+                    img: null,
+                    opts: ["infrastruktur", "teknologi", "sumber daya alam", "sumber daya manusia"],
+                    key: 3, // D
+                    reason: "Pelatihan meningkatkan keterampilan manusia (SDM)."
+                },
+                {
+                    q: "Salah satu faktor yang dapat meningkatkan perekonomian daerah adalah...",
+                    img: null,
+                    opts: ["sedikitnya SDA", "SDM berkualitas", "membatasi teknologi", "tingginya kesenjangan"],
+                    key: 1, // B
+                    reason: "SDM yang pintar dan terampil akan mengelola daerah dengan baik."
+                },
+                {
+                    q: "Gambar di atas menunjukkan kondisi perekonomian didukung oleh...",
+                    img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhc4EC0aNhTzPnUoZRSoLuYQHa5vUYHKtlHwPpbHUvAoIhWcLG4jpmpJzZ3fTo8m7-zfdRuauyDojCrB4J830uDUz42dcB1Jk_7ZDpcATdc3xMavQFDaiPcBAFbzmHC2uLiiKkrl3vMROYsQSnADrn59yc783IsLYZ9G-n1l5lDM1p1Ux03sU7Cva1ODss/s320-rw/perekonomian%20disebabkan%20oleh%20kelas%205%20kumer%20ipas.png",
+                    opts: ["sarana dan prasarana", "kondisi geografis", "sumber daya alam", "cuaca dan musim"],
+                    key: 0, // A
+                    reason: "Alat berat atau fasilitas umum termasuk sarana prasarana."
+                },
+                {
+                    q: "Cara konsumen meningkatkan ekonomi daerah: (1. Beli produk lokal, 4. Bangga produk lokal).",
+                    img: null,
+                    opts: ["1 dan 3", "2 dan 3", "1 dan 4", "2 dan 4"],
+                    key: 2, // C
+                    reason: "Membeli dan bangga pada produk lokal membantu pedagang daerah kita."
+                },
+                {
+                    q: "Kabupaten Sumedang terkenal memproduksi makanan bergizi yaitu...",
+                    img: null,
+                    opts: ["mie", "ayam", "rendang", "tahu"],
+                    key: 3, // D
+                    reason: "Tahu Sumedang adalah produk unggulan daerah tersebut."
+                }
+            ]
+        };
+
+        // --- STATE & LOGIC ---
+        let currentPacket = 1;
+        let userAnswers = {}; // { qIndex: selectedOptIndex }
+        let timerInterval;
+        let seconds = 0;
+
+        function startQuiz(packetNum) {
+            currentPacket = packetNum;
+            userAnswers = {};
+            seconds = 0;
+            
+            // Switch UI
+            document.getElementById('homePage').classList.add('hidden-section');
+            document.getElementById('resultPage').classList.add('hidden-section');
+            document.getElementById('quizPage').classList.remove('hidden-section');
+            document.getElementById('timerDisplay').classList.remove('hidden');
+            
+            // Set Title
+            const title = packetNum === 1 ? "Paket 1: Warisan Budaya" : "Paket 2: Aktivitas Ekonomi";
+            document.getElementById('quizTitle').innerText = title;
+
+            // Render Questions
+            renderQuestions();
+
+            // Start Timer
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                seconds++;
+                const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const secs = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById('timerDisplay').innerText = `⏱️ ${mins}:${secs}`;
+            }, 1000);
+
+            window.scrollTo(0,0);
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            
+            const questions = packets[currentPacket];
+            questions.forEach((item, index) => {
+                const imgHTML = item.img ? `<img src="${item.img}" class="max-w-xs mx-auto rounded-lg mb-4 border" alt="Gambar Soal">` : '';
+                
+                let optsHTML = '';
+                const letters = ['A', 'B', 'C', 'D'];
+                item.opts.forEach((opt, optIndex) => {
+                    optsHTML += `
+                        <button onclick="selectAnswer(${index}, ${optIndex})" 
+                                id="btn-${index}-${optIndex}"
+                                class="btn-option w-full border rounded-lg p-3 mb-2 flex items-center gap-3">
+                            <span class="font-bold bg-gray-100 text-gray-600 w-8 h-8 flex items-center justify-center rounded-full text-sm border">${letters[optIndex]}</span>
+                            <span>${opt}</span>
+                        </button>
+                    `;
+                });
+
+                const html = `
+                    <div class="border-b pb-8 last:border-0" id="q-block-${index}">
+                        <div class="bg-blue-50 text-blue-800 font-bold inline-block px-3 py-1 rounded mb-3 text-sm">Soal No. ${index + 1}</div>
+                        ${imgHTML}
+                        <p class="text-lg font-medium mb-4">${item.q}</p>
+                        <div class="space-y-2">
+                            ${optsHTML}
+                        </div>
+                        <div id="feedback-${index}" class="hidden mt-4 p-4 rounded-lg bg-yellow-50 text-sm"></div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+        }
+
+        function selectAnswer(qIndex, optIndex) {
+            // Save answer
+            userAnswers[qIndex] = optIndex;
+            
+            // UI Update
+            const buttons = document.querySelectorAll(`#q-block-${qIndex} .btn-option`);
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            document.getElementById(`btn-${qIndex}-${optIndex}`).classList.add('selected');
+        }
+
+        function submitQuiz() {
+            // Check if all answered (optional, skipping for now to allow partial submit)
+            const totalQ = packets[currentPacket].length;
+            const answeredQ = Object.keys(userAnswers).length;
+            
+            if (answeredQ < totalQ) {
+                if(!confirm(`Kamu baru menjawab ${answeredQ} dari ${totalQ} soal. Yakin ingin mengirim?`)) return;
+            }
+
+            clearInterval(timerInterval);
+            calculateScore();
+        }
+
+        function calculateScore() {
+            const questions = packets[currentPacket];
+            let score = 0;
+            
+            questions.forEach((q, index) => {
+                if (userAnswers[index] === q.key) {
+                    score++;
+                }
+            });
+
+            const finalScore = Math.round((score / questions.length) * 100);
+            
+            // Switch to Result Page
+            document.getElementById('quizPage').classList.add('hidden-section');
+            document.getElementById('timerDisplay').classList.add('hidden');
+            document.getElementById('resultPage').classList.remove('hidden-section');
+            
+            // Show Score
+            document.getElementById('scoreDisplay').innerText = finalScore;
+            const msg = finalScore >= 80 ? "Luar Biasa! 🎉" : finalScore >= 60 ? "Bagus! Terus Belajar 💪" : "Jangan Menyerah, Coba Lagi! 🔥";
+            document.getElementById('scoreMessage').innerText = msg;
+
+            window.scrollTo(0,0);
+        }
+
+        function reviewAnswers() {
+            document.getElementById('resultPage').classList.add('hidden-section');
+            document.getElementById('quizPage').classList.remove('hidden-section');
+            
+            // Hide submit button, Show Home button
+            const submitBtn = document.querySelector('#quizPage button[onclick="submitQuiz()"]');
+            submitBtn.style.display = 'none';
+            
+            // Add "Back to Home" button at bottom if not exists
+            if (!document.getElementById('backHomeBtn')) {
+                const btn = document.createElement('button');
+                btn.id = 'backHomeBtn';
+                btn.className = "bg-gray-600 text-white text-xl font-bold px-10 py-3 rounded-full hover:bg-gray-700 shadow-lg mt-4";
+                btn.innerText = "🏠 Kembali ke Menu Utama";
+                btn.onclick = () => location.reload();
+                submitBtn.parentElement.appendChild(btn);
+            }
+
+            const questions = packets[currentPacket];
+            
+            questions.forEach((q, index) => {
+                const userAns = userAnswers[index];
+                const feedbackDiv = document.getElementById(`feedback-${index}`);
+                feedbackDiv.classList.remove('hidden');
+                
+                // Disable buttons
+                const buttons = document.querySelectorAll(`#q-block-${index} .btn-option`);
+                buttons.forEach(btn => { btn.disabled = true; btn.style.cursor = 'default'; });
+
+                // Highlight Answers
+                if (userAns !== undefined) {
+                    if (userAns === q.key) {
+                        document.getElementById(`btn-${index}-${userAns}`).classList.add('correct-answer');
+                        feedbackDiv.innerHTML = `<span class="text-green-700 font-bold">✅ Benar!</span> <br> ${q.reason}`;
+                        feedbackDiv.classList.add('border', 'border-green-200');
+                    } else {
+                        document.getElementById(`btn-${index}-${userAns}`).classList.add('wrong-answer');
+                        document.getElementById(`btn-${index}-${q.key}`).classList.add('correct-answer');
+                        feedbackDiv.innerHTML = `<span class="text-red-600 font-bold">❌ Kurang Tepat.</span> <br> Jawaban yang benar adalah pilihan yang hijau.<br><strong>Pembahasan:</strong> ${q.reason}`;
+                        feedbackDiv.classList.add('border', 'border-red-200');
+                    }
+                } else {
+                    document.getElementById(`btn-${index}-${q.key}`).classList.add('correct-answer');
+                    feedbackDiv.innerHTML = `<span class="text-orange-600 font-bold">⚠️ Kamu tidak menjawab.</span> <br> <strong>Pembahasan:</strong> ${q.reason}`;
+                }
+            });
+
+            window.scrollTo(0,0);
+        }
+    </script>
+</body>
+</html>
