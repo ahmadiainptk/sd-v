@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rangkuman IPAS Kelas 5 Bab 7</title>
+    <!-- Tailwind CSS untuk styling cepat -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js untuk grafik -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Mermaid.js untuk diagram -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <!-- Font Lucu untuk Anak-anak -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background-color: #f0f9ff;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .btn-answer {
+            transition: all 0.3s ease;
+        }
+        .btn-answer:hover {
+            transform: scale(1.02);
+        }
+        .correct {
+            background-color: #4ade80 !important; /* Green */
+            color: white;
+        }
+        .wrong {
+            background-color: #f87171 !important; /* Red */
+            color: white;
+        }
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-500 p-4 sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center text-white">
+            <h1 class="text-2xl font-bold">IPAS Kelas 5 - Bab 7</h1>
+            <div class="hidden md:flex space-x-4">
+                <a href="#budaya" class="hover:text-yellow-300 font-semibold">Warisan Budaya</a>
+                <a href="#ekonomi" class="hover:text-yellow-300 font-semibold">Aktivitas Ekonomi</a>
+                <a href="#kuis" class="bg-yellow-400 text-blue-800 px-4 py-1 rounded-full font-bold hover:bg-yellow-300 transition">Latihan Soal</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="container mx-auto mt-8 p-6 text-center">
+        <h2 class="text-4xl font-bold text-blue-600 mb-2">Daerahku Kebanggaanku</h2>
+        <p class="text-xl text-gray-600">Yuk, kita pelajari kekayaan budaya dan kegiatan ekonomi di daerah kita!</p>
+    </header>
+
+    <!-- Content Wrapper -->
+    <main class="container mx-auto p-4 space-y-12">
+
+        <!-- SECTION 1: WARISAN BUDAYA -->
+        <section id="budaya" class="scroll-mt-24">
+            <div class="flex items-center space-x-2 mb-6">
+                <div class="bg-orange-500 p-2 rounded-lg text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                </div>
+                <h3 class="text-3xl font-bold text-orange-600">1. Warisan Budaya</h3>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Text Content -->
+                <div class="card p-6">
+                    <h4 class="text-xl font-bold mb-4 text-orange-500">Apa itu Warisan Budaya?</h4>
+                    <p class="mb-4 text-lg">
+                        Warisan budaya adalah peninggalan dari nenek moyang kita yang memiliki nilai sejarah, seni, dan tradisi. Warisan ini diturunkan dari generasi ke generasi.
+                    </p>
+                    <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-4">
+                        <p class="font-bold">✨ Istilah Penting: Akulturasi</p>
+                        <p>Pencampuran dua kebudayaan atau lebih yang saling bertemu dan memengaruhi. Contoh: Candi Borobudur (Campuran budaya lokal Indonesia & Hindu-Buddha India).</p>
+                    </div>
+                </div>
+
+                <!-- Custom SVG Illustration of a Temple -->
+                <div class="card p-6 flex flex-col items-center justify-center bg-orange-50">
+                    <h4 class="text-lg font-bold mb-2 text-center text-orange-400">Ilustrasi Candi (Warisan Benda)</h4>
+                    <svg width="250" height="150" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Sky -->
+                        <rect width="300" height="200" fill="#bae6fd" rx="15"/>
+                        <!-- Sun -->
+                        <circle cx="250" cy="40" r="25" fill="#fde047" />
+                        <!-- Ground -->
+                        <rect y="160" width="300" height="40" fill="#84cc16" />
+                        <!-- Candi Structure -->
+                        <!-- Base -->
+                        <rect x="50" y="140" width="200" height="20" fill="#78716c" />
+                        <rect x="70" y="120" width="160" height="20" fill="#78716c" />
+                        <rect x="90" y="100" width="120" height="20" fill="#78716c" />
+                        <!-- Stupas -->
+                        <path d="M130 100 Q150 60 170 100" fill="#57534e" />
+                        <path d="M100 100 Q110 80 120 100" fill="#57534e" />
+                        <path d="M180 100 Q190 80 200 100" fill="#57534e" />
+                        <!-- Door -->
+                        <rect x="140" y="145" width="20" height="15" fill="#292524" rx="5" />
+                    </svg>
+                    <p class="text-sm text-gray-500 mt-2">Gambar: Ilustrasi Sederhana Candi</p>
+                </div>
+            </div>
+
+            <!-- Mermaid Diagram for Culture Types -->
+            <div class="card p-6 mt-6">
+                <h4 class="text-xl font-bold mb-4 text-center text-orange-500">Bagan Jenis Warisan Budaya</h4>
+                <div class="mermaid flex justify-center">
+                    graph TD
+                    A[Warisan Budaya] -->|Dibagi Menjadi| B(Benda / Tangible)
+                    A -->|Dibagi Menjadi| C(Tak Benda / Intangible)
+                    
+                    B --> B1[Candi & Bangunan]
+                    B --> B2[Pakaian Adat]
+                    B --> B3[Senjata Tradisional]
+                    B --> B4[Alat Musik]
+                    
+                    C --> C1[Tarian Daerah]
+                    C --> C2[Lagu Daerah]
+                    C --> C3[Bahasa]
+                    C --> C4[Adat Istiadat]
+
+                    style A fill:#f97316,stroke:#333,stroke-width:2px,color:white
+                    style B fill:#fdba74,stroke:#333,stroke-width:2px
+                    style C fill:#fdba74,stroke:#333,stroke-width:2px
+                </div>
+            </div>
+        </section>
+
+        <hr class="border-t-2 border-gray-200">
+
+        <!-- SECTION 2: AKTIVITAS EKONOMI -->
+        <section id="ekonomi" class="scroll-mt-24">
+            <div class="flex items-center space-x-2 mb-6">
+                <div class="bg-green-500 p-2 rounded-lg text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-3xl font-bold text-green-600">2. Aktivitas Ekonomi</h3>
+            </div>
+
+            <!-- Mermaid Diagram for Economic Flow -->
+            <div class="card p-6 mb-8 bg-green-50">
+                <h4 class="text-xl font-bold mb-4 text-center text-green-600">Alur Kegiatan Ekonomi</h4>
+                <p class="text-center mb-4">Aktivitas ekonomi adalah kegiatan manusia untuk memenuhi kebutuhan hidup.</p>
+                <div class="mermaid flex justify-center">
+                    graph LR
+                    P[<b>Produksi</b><br/>Menghasilkan Barang/Jasa<br/>(Petani, Pabrik)] -->|Menjual| D[<b>Distribusi</b><br/>Menyalurkan Barang<br/>(Kurir, Pedagang)]
+                    D -->|Membeli| K[<b>Konsumsi</b><br/>Menggunakan Barang<br/>(Pembeli, Kita semua)]
+                    
+                    style P fill:#4ade80,stroke:#333,stroke-width:2px
+                    style D fill:#facc15,stroke:#333,stroke-width:2px
+                    style K fill:#60a5fa,stroke:#333,stroke-width:2px
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Factors List -->
+                <div class="card p-6">
+                    <h4 class="text-xl font-bold mb-4 text-green-600">Faktor Pendukung Ekonomi Daerah</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="bg-green-200 text-green-800 px-2 rounded mr-2 mt-1">1</span>
+                            <span><strong>Sumber Daya Alam (SDA):</strong> Ketersediaan bahan baku (tanah subur, laut kaya ikan).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-green-200 text-green-800 px-2 rounded mr-2 mt-1">2</span>
+                            <span><strong>Sumber Daya Manusia (SDM):</strong> Tenaga kerja yang terampil.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-green-200 text-green-800 px-2 rounded mr-2 mt-1">3</span>
+                            <span><strong>Infrastruktur:</strong> Jalan, jembatan, listrik, dan pasar yang memadai.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-green-200 text-green-800 px-2 rounded mr-2 mt-1">4</span>
+                            <span><strong>Teknologi:</strong> Penggunaan mesin canggih dan internet.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Chart.js Visualization -->
+                <div class="card p-6">
+                    <h4 class="text-xl font-bold mb-4 text-center text-green-600">Contoh Sektor Ekonomi (Grafik)</h4>
+                    <div class="relative h-64">
+                        <canvas id="economicChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-gray-500 mt-2">*Contoh data sebaran mata pencaharian di sebuah daerah agraris</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="border-t-2 border-gray-200">
+
+        <!-- SECTION 3: QUIZ / LATIHAN SOAL -->
+        <section id="kuis" class="scroll-mt-24 pb-12">
+            <div class="flex items-center space-x-2 mb-6 justify-center">
+                <div class="bg-blue-500 p-2 rounded-lg text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-3xl font-bold text-blue-600">Latihan Soal Interaktif</h3>
+            </div>
+            
+            <p class="text-center mb-8">Pilih jawaban yang paling tepat ya!</p>
+
+            <div class="space-y-6 max-w-3xl mx-auto">
+                <!-- Soal 1 -->
+                <div class="card p-6" id="q1">
+                    <p class="font-bold text-lg mb-3">1. Candi Borobudur dan alat musik gamelan termasuk dalam jenis warisan budaya apa?</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <button onclick="checkAnswer('q1', 'a')" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">A. Warisan Budaya Tak Benda</button>
+                        <button onclick="checkAnswer('q1', 'b', true)" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">B. Warisan Budaya Benda</button>
+                        <button onclick="checkAnswer('q1', 'c')" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">C. Warisan Budaya Asing</button>
+                    </div>
+                    <p class="feedback hidden mt-2 font-bold"></p>
+                </div>
+
+                <!-- Soal 2 -->
+                <div class="card p-6" id="q2">
+                    <p class="font-bold text-lg mb-3">2. Kegiatan menghabiskan atau menggunakan barang dan jasa disebut...</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <button onclick="checkAnswer('q2', 'a')" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">A. Produksi</button>
+                        <button onclick="checkAnswer('q2', 'b')" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">B. Distribusi</button>
+                        <button onclick="checkAnswer('q2', 'c', true)" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">C. Konsumsi</button>
+                    </div>
+                    <p class="feedback hidden mt-2 font-bold"></p>
+                </div>
+
+                <!-- Soal 3 -->
+                <div class="card p-6" id="q3">
+                    <p class="font-bold text-lg mb-3">3. Percampuran dua budaya yang saling memengaruhi, seperti budaya India dan lokal pada Candi Borobudur, disebut...</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <button onclick="checkAnswer('q3', 'a', true)" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">A. Akulturasi</button>
+                        <button onclick="checkAnswer('q3', 'b')" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">B. Infrastruktur</button>
+                        <button onclick="checkAnswer('q3', 'c')" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">C. Modernisasi</button>
+                    </div>
+                    <p class="feedback hidden mt-2 font-bold"></p>
+                </div>
+
+                <!-- Soal 4 -->
+                <div class="card p-6" id="q4">
+                    <p class="font-bold text-lg mb-3">4. Manakah di bawah ini yang merupakan faktor pendukung aktivitas ekonomi?</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <button onclick="checkAnswer('q4', 'a')" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">A. Banyaknya mainan</button>
+                        <button onclick="checkAnswer('q4', 'b', true)" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">B. Kondisi infrastruktur jalan yang baik</button>
+                        <button onclick="checkAnswer('q4', 'c')" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">C. Warna bangunan rumah</button>
+                    </div>
+                    <p class="feedback hidden mt-2 font-bold"></p>
+                </div>
+
+                <!-- Soal 5 -->
+                <div class="card p-6" id="q5">
+                    <p class="font-bold text-lg mb-3">5. Produk unggulan daerah seperti Rendang berasal dari...</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <button onclick="checkAnswer('q5', 'a')" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">A. Jawa Tengah</button>
+                        <button onclick="checkAnswer('q5', 'b')" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">B. Bali</button>
+                        <button onclick="checkAnswer('q5', 'c', true)" class="btn-answer w-full text-left p-3 rounded bg-gray-100 hover:bg-blue-100">C. Sumatera Barat (Minangkabau)</button>
+                    </div>
+                    <p class="feedback hidden mt-2 font-bold"></p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <button onclick="resetQuiz()" class="bg-gray-500 text-white px-6 py-2 rounded-full hover:bg-gray-600">Ulangi Kuis</button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-blue-600 text-white text-center p-4 mt-8">
+        <p>&copy; 2024 Bahan Belajar IPAS Kelas 5 SD.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({ startOnLoad: true });
+
+        // Initialize Chart.js
+        const ctx = document.getElementById('economicChart').getContext('2d');
+        const economicChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pertanian', 'Perdagangan', 'Jasa', 'Industri'],
+                datasets: [{
+                    label: 'Persentase',
+                    data: [45, 25, 20, 10],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 99, 132, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+
+        // Quiz Logic
+        function checkAnswer(questionId, selectedAnswer, isCorrect = false) {
+            const container = document.getElementById(questionId);
+            const buttons = container.querySelectorAll('button');
+            const feedback = container.querySelector('.feedback');
+
+            // Disable all buttons in this question
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-blue-100');
+                if (btn.onclick.toString().includes('true')) {
+                    btn.classList.add('correct'); // Highlight correct answer
+                }
+            });
+
+            if (isCorrect) {
+                feedback.textContent = "Hebat! Jawabanmu Benar! 🎉";
+                feedback.classList.remove('hidden', 'text-red-500');
+                feedback.classList.add('text-green-600');
+            } else {
+                // Highlight the clicked wrong answer
+                event.target.classList.add('wrong');
+                feedback.textContent = "Yah, kurang tepat. Jawaban yang benar ditandai hijau ya. 💪";
+                feedback.classList.remove('hidden', 'text-green-600');
+                feedback.classList.add('text-red-500');
+            }
+        }
+
+        function resetQuiz() {
+            const buttons = document.querySelectorAll('.btn-answer');
+            const feedbacks = document.querySelectorAll('.feedback');
+            
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('correct', 'wrong');
+                btn.classList.add('hover:bg-blue-100');
+            });
+
+            feedbacks.forEach(fb => {
+                fb.classList.add('hidden');
+            });
+
+            window.scrollTo({
+                top: document.getElementById('kuis').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>
