@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Soal Bangun Datar & Segitiga</title>
+    
+    <!-- Tailwind CSS untuk styling cepat -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- KaTeX untuk Matematika -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; }
+        .katex { font-size: 1.1em; }
+        .option-label { cursor: pointer; transition: all 0.2s; }
+        .option-label:hover { background-color: #eff6ff; }
+        .selected-option { background-color: #dbeafe; border-color: #3b82f6; }
+        .correct-answer { background-color: #dcfce7 !important; border-color: #22c55e !important; }
+        .wrong-answer { background-color: #fee2e2 !important; border-color: #ef4444 !important; }
+        
+        /* Custom SVG Styles */
+        svg { display: block; margin: 10px auto; max-width: 100%; height: auto; }
+        .shape-stroke { stroke: #374151; stroke-width: 2; fill: #e5e7eb; }
+        .shape-line { stroke: #374151; stroke-width: 2; stroke-linecap: round; }
+        .shape-label { font-size: 14px; font-weight: bold; fill: #1f2937; }
+        .angle-mark { fill: none; stroke: #ef4444; stroke-width: 1.5; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Matematika: Bangun Datar</h1>
+            <div id="score-display" class="hidden bg-white text-blue-600 px-4 py-1 rounded-full font-bold">
+                Nilai: <span id="final-score">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-4">
+        <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+            
+            <!-- Packet Selector -->
+            <div id="packet-selector" class="p-8 text-center">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">Pilih Paket Soal</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button onclick="loadQuiz(1)" class="p-6 bg-blue-50 border-2 border-blue-200 rounded-xl hover:bg-blue-100 hover:border-blue-500 transition group">
+                        <div class="text-4xl mb-2">📐</div>
+                        <h3 class="font-bold text-blue-800">Paket 1</h3>
+                        <p class="text-sm text-gray-600">Segitiga & Ciri-cirinya</p>
+                    </button>
+                    <button onclick="loadQuiz(2)" class="p-6 bg-green-50 border-2 border-green-200 rounded-xl hover:bg-green-100 hover:border-green-500 transition group">
+                        <div class="text-4xl mb-2">Wm</div>
+                        <h3 class="font-bold text-green-800">Paket 2</h3>
+                        <p class="text-sm text-gray-600">Segiempat (Jajar Genjang, dll)</p>
+                    </button>
+                    <button onclick="loadQuiz(3)" class="p-6 bg-purple-50 border-2 border-purple-200 rounded-xl hover:bg-purple-100 hover:border-purple-500 transition group">
+                        <div class="text-4xl mb-2">⭐</div>
+                        <h3 class="font-bold text-purple-800">Paket 3</h3>
+                        <p class="text-sm text-gray-600">Soal Campuran & Analisis</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Container (Hidden by default) -->
+            <div id="quiz-container" class="hidden">
+                <div class="bg-gray-50 p-4 border-b flex justify-between items-center">
+                    <h2 class="font-bold text-lg" id="packet-title">Paket Soal</h2>
+                    <button onclick="resetQuiz()" class="text-sm text-red-500 hover:underline">Keluar / Ganti Paket</button>
+                </div>
+                
+                <form id="quiz-form" class="p-6 space-y-8">
+                    <!-- Questions will be injected here -->
+                </form>
+
+                <div class="p-6 bg-gray-50 border-t text-center">
+                    <button id="submit-btn" onclick="submitQuiz()" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700 transition shadow-lg w-full md:w-auto">
+                        Cek Nilai & Pembahasan
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-400 text-center p-4 text-sm mt-8">
+        <p>&copy; 2024 Latihan Matematika SD. Dibuat dengan Teknologi Web.</p>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOAL (DATABASE) ---
+        const questionData = {
+            1: {
+                title: "Paket 1: Segitiga",
+                questions: [
+                    // --- 1 to 5 (Based on user request) ---
+                    {
+                        q: "Adit akan membentuk segitiga dengan menggunakan 3 buah pipet. Manakah ukuran pipet yang <b>dapat</b> membentuk segitiga? (Syarat: $a + b > c$)",
+                        svg: `<svg width="200" height="100" viewBox="0 0 200 100"><path d="M20,80 L80,80 M100,80 L140,80 M160,80 L180,80" stroke="black" stroke-width="3" stroke-linecap="round"/><text x="100" y="40" text-anchor="middle" font-size="12">Pipet dengan panjang berbeda</text></svg>`,
+                        options: ["3 cm, 5 cm, 8 cm", "4 cm, 6 cm, 14 cm", "5 cm, 7 cm, 11 cm", "6 cm, 8 cm, 15 cm"],
+                        ans: 2,
+                        discussion: "Syarat terbentuknya segitiga adalah jumlah dua sisi terpendek harus lebih besar dari sisi terpanjang ($a+b > c$). <br> A. $3+5 = 8$ (Tidak bisa) <br> B. $4+6 = 10 < 14$ (Tidak bisa) <br> **C. $5+7 = 12 > 11$ (Bisa)**"
+                    },
+                    {
+                        q: "Perbedaan segitiga ABC (siku-siku) dengan segitiga EFG (tumpul) di bawah ini adalah...",
+                        svg: `<svg width="300" height="120" viewBox="0 0 300 120">
+                            <!-- ABC Siku-siku -->
+                            <polygon points="20,100 20,20 80,100" class="shape-stroke"/>
+                            <rect x="20" y="90" width="10" height="10" fill="none" stroke="black"/>
+                            <text x="10" y="115" class="shape-label">A</text><text x="10" y="15" class="shape-label">B</text><text x="90" y="115" class="shape-label">C</text>
+                            <!-- EFG Tumpul -->
+                            <polygon points="150,100 280,100 120,20" class="shape-stroke"/>
+                            <text x="140" y="115" class="shape-label">E</text><text x="290" y="115" class="shape-label">F</text><text x="110" y="15" class="shape-label">G</text>
+                        </svg>`,
+                        options: ["$\\Delta ABC$ siku-siku, $\\Delta EFG$ tumpul", "$\\Delta ABC$ tumpul, $\\Delta EFG$ siku-siku", "$\\Delta ABC$ lancip, $\\Delta EFG$ siku-siku", "$\\Delta ABC$ siku-siku, $\\Delta EFG$ lancip"],
+                        ans: 0,
+                        discussion: "Segitiga ABC memiliki tanda kotak kecil yang menandakan sudut siku-siku ($90^\\circ$). Segitiga EFG memiliki satu sudut yang sangat lebar ($>90^\\circ$) yang disebut sudut tumpul."
+                    },
+                    {
+                        q: "Segitiga ABC memiliki 1 sudut tumpul, sedangkan Segitiga HIJ semua sudutnya kurang dari $90^\\circ$. Perbedaan yang tepat adalah...",
+                        svg: `<svg width="300" height="100" viewBox="0 0 300 100"><text x="150" y="50" text-anchor="middle">Bayangkan dua segitiga berbeda jenis sudut</text></svg>`,
+                        options: ["$\\Delta ABC$ Segitiga Lancip", "$\\Delta HIJ$ Segitiga Tumpul", "$\\Delta ABC$ Tumpul, $\\Delta HIJ$ Lancip", "Keduanya Segitiga Siku-siku"],
+                        ans: 2,
+                        discussion: "Segitiga dengan 1 sudut tumpul disebut **Segitiga Tumpul**. Segitiga yang ketiga sudutnya lancip (kurang dari $90^\\circ$) disebut **Segitiga Lancip**."
+                    },
+                    {
+                        q: "Jika sudut-sudut dalam sebuah segitiga dijumlahkan, maka hasilnya selalu sama dengan...",
+                        svg: `<svg width="150" height="100" viewBox="0 0 150 100"><polygon points="20,80 130,80 75,20" class="shape-stroke"/><text x="40" y="75" font-size="10">x</text><text x="100" y="75" font-size="10">y</text><text x="70" y="40" font-size="10">z</text></svg>`,
+                        options: ["$90^\\circ$", "$150^\\circ$", "$160^\\circ$", "$180^\\circ$"],
+                        ans: 3,
+                        discussion: "Jumlah ketiga sudut dalam segitiga apa pun (lancip, siku-siku, atau tumpul) selalu **$180^\\circ$**."
+                    },
+                    {
+                        q: "Segitiga yang memiliki setidaknya 2 sisi yang sama panjang disebut segitiga...",
+                        svg: `<svg width="100" height="100" viewBox="0 0 100 100"><polygon points="50,10 20,90 80,90" class="shape-stroke"/><line x1="30" y1="50" x2="40" y2="50" stroke="black"/><line x1="60" y1="50" x2="70" y2="50" stroke="black"/></svg>`,
+                        options: ["Segitiga Sama Sisi", "Segitiga Sama Kaki", "Segitiga Sembarang", "Segitiga Siku-siku"],
+                        ans: 1,
+                        discussion: "Ciri khas **Segitiga Sama Kaki** adalah memiliki sepasang sisi (kaki) yang sama panjang."
+                    },
+                    // --- 6 to 10 ---
+                    {
+                        q: "Berapa banyak simetri lipat yang dimiliki oleh segitiga sama sisi?",
+                        svg: `<svg width="100" height="100" viewBox="0 0 100 100"><polygon points="50,10 10,80 90,80" class="shape-stroke"/><path d="M50,10 L50,80" stroke="gray" stroke-dasharray="4"/><path d="M10,80 L70,35" stroke="gray" stroke-dasharray="4"/><path d="M90,80 L30,35" stroke="gray" stroke-dasharray="4"/></svg>`,
+                        options: ["0", "1", "2", "3"],
+                        ans: 3,
+                        discussion: "Segitiga sama sisi adalah bangun yang sangat teratur. Ia bisa dilipat menjadi dua bagian yang sama persis melalui **3 sumbu simetri**."
+                    },
+                    {
+                        q: "Segitiga sembarang (semua sisi berbeda panjang) memiliki simetri lipat sebanyak...",
+                        svg: `<svg width="100" height="80" viewBox="0 0 100 80"><polygon points="10,70 60,70 80,10" class="shape-stroke"/></svg>`,
+                        options: ["0", "1", "2", "3"],
+                        ans: 0,
+                        discussion: "Karena semua sisinya berbeda panjang, segitiga sembarang **tidak memiliki** sumbu simetri lipat sama sekali."
+                    },
+                    {
+                        q: "Simetri putar pada segitiga sama sisi jika diputar $360^\\circ$ akan menempati bingkainya sebanyak...",
+                        options: ["1 kali", "2 kali", "3 kali", "Tidak punya"],
+                        ans: 2,
+                        discussion: "Segitiga sama sisi dapat menempati bingkainya pada putaran $120^\\circ$, $240^\\circ$, dan $360^\\circ$. Jadi ada **3 simetri putar**."
+                    },
+                    {
+                        q: "Segitiga sama sisi memiliki besar sudut yang sama pada ketiga sudutnya, yaitu masing-masing sebesar...",
+                        options: ["$45^\\circ$", "$50^\\circ$", "$60^\\circ$", "$90^\\circ$"],
+                        ans: 2,
+                        discussion: "Total sudut segitiga adalah $180^\\circ$. Karena sama sisi, maka semua sudutnya sama besar: $180^\\circ : 3 = 60^\\circ$."
+                    },
+                    {
+                        q: "Diketahui segitiga siku-siku. Salah satu sudutnya $30^\\circ$. Berapakah besar sudut yang ketiga?",
+                        options: ["$30^\\circ$", "$60^\\circ$", "$90^\\circ$", "$120^\\circ$"],
+                        ans: 1,
+                        discussion: "Segitiga siku-siku pasti punya sudut $90^\\circ$. Total sudut = $180^\\circ$. <br>Sudut ketiga = $180^\\circ - (90^\\circ + 30^\\circ) = 180^\\circ - 120^\\circ = 60^\\circ$."
+                    },
+                    // --- 11 to 20 ---
+                    { 
+                        q: "Segitiga tumpul adalah segitiga yang salah satu sudutnya lebih besar dari...", 
+                        options: ["$45^\\circ$", "$60^\\circ$", "$90^\\circ$", "$180^\\circ$"], 
+                        ans: 2, 
+                        discussion: "Definisi sudut tumpul adalah sudut yang besarnya **lebih dari $90^\\circ$** dan kurang dari $180^\\circ$." 
+                    },
+                    { 
+                        q: "Segitiga lancip adalah segitiga yang...", 
+                        options: ["Salah satu sudutnya $90^\\circ$", "Semua sudutnya $< 90^\\circ$", "Salah satu sudutnya $> 90^\\circ$", "Memiliki 2 sisi sejajar"], 
+                        ans: 1, 
+                        discussion: "Segitiga lancip memiliki syarat **ketiga** sudutnya harus lancip (kurang dari $90^\\circ$)." 
+                    },
+                    { 
+                        q: "Manakah dari kelompok sisi berikut yang membentuk segitiga siku-siku? (Ingat Tripel Phytagoras)", 
+                        options: ["3 cm, 4 cm, 5 cm", "3 cm, 4 cm, 6 cm", "5 cm, 5 cm, 5 cm", "6 cm, 8 cm, 12 cm"], 
+                        ans: 0, 
+                        discussion: "Berlaku hukum Phytagoras $a^2 + b^2 = c^2$. <br> $3^2 + 4^2 = 9 + 16 = 25$. <br> Akar 25 adalah 5. Jadi 3, 4, 5 adalah sisi segitiga siku-siku." 
+                    },
+                    { 
+                        q: "Jumlah sudut pada dua buah segitiga adalah...", 
+                        options: ["$180^\\circ$", "$270^\\circ$", "$360^\\circ$", "$540^\\circ$"], 
+                        ans: 2, 
+                        discussion: "Satu segitiga jumlah sudutnya $180^\\circ$. Jika ada dua segitiga, maka $180^\\circ \\times 2 = 360^\\circ$." 
+                    },
+                    { 
+                        q: "Jika sebuah segitiga sama sisi memiliki keliling 36 cm, berapakah panjang setiap sisinya?", 
+                        options: ["12 cm", "10 cm", "18 cm", "6 cm"], 
+                        ans: 0, 
+                        discussion: "Segitiga sama sisi memiliki 3 sisi yang sama panjang. <br> Sisi = Keliling : 3 <br> Sisi = 36 : 3 = **12 cm**." 
+                    },
+                    { 
+                        q: "Keliling segitiga sama sisi dengan panjang sisi 8 cm adalah...", 
+                        options: ["16 cm", "24 cm", "32 cm", "64 cm"], 
+                        ans: 1, 
+                        discussion: "Keliling = sisi + sisi + sisi <br> Keliling = $8 + 8 + 8$ (atau $8 \\times 3$) = **24 cm**." 
+                    },
+                    { 
+                        q: "Segitiga sama kaki memiliki berapa sudut yang sama besar?", 
+                        options: ["Tidak ada", "2 sudut", "3 sudut", "4 sudut"], 
+                        ans: 1, 
+                        discussion: "Segitiga sama kaki memiliki sepasang kaki yang sama panjang, sehingga **2 sudut** di bagian bawah kakinya juga sama besar." 
+                    },
+                    { 
+                        q: "Garis yang ditarik dari salah satu titik sudut tegak lurus ke sisi di hadapannya disebut...", 
+                        options: ["Garis bagi", "Garis berat", "Garis tinggi", "Garis sumbu"], 
+                        ans: 2, 
+                        discussion: "**Garis tinggi** adalah garis yang tegak lurus (membentuk sudut siku-siku) terhadap sisi alas." 
+                    },
+                    { 
+                        q: "Sudut luar segitiga sama sisi besarnya adalah...", 
+                        options: ["$60^\\circ$", "$90^\\circ$", "$120^\\circ$", "$180^\\circ$"], 
+                        ans: 2, 
+                        discussion: "Sudut dalam segitiga sama sisi adalah $60^\\circ$. Sudut lurus (pelurus) adalah $180^\\circ$. <br> Sudut luar = $180^\\circ - 60^\\circ = 120^\\circ$." 
+                    },
+                    { 
+                        q: "Jika sebuah segitiga memiliki sisi 10 cm, 10 cm, dan 10 cm, maka jenisnya adalah...", 
+                        options: ["Sama kaki", "Sama sisi", "Sembarang", "Siku-siku"], 
+                        ans: 1, 
+                        discussion: "Karena ketiga sisinya memiliki angka yang sama (10 cm), maka itu adalah **Segitiga Sama Sisi**." 
+                    }
+                ]
+            },
+            2: {
+                title: "Paket 2: Segiempat",
+                questions: [
+                    {
+                        q: "Perhatikan gambar Jajargenjang. Bangun ini memiliki...",
+                        svg: `<svg width="150" height="80" viewBox="0 0 150 80"><polygon points="30,70 140,70 120,10 10,10" class="shape-stroke"/></svg>`,
+                        options: ["Sepasang sisi sejajar", "Dua pasang sisi sejajar", "Tiga pasang sisi sejajar", "Empat sisi sama panjang"],
+                        ans: 1,
+                        discussion: "Jajargenjang memiliki **dua pasang** sisi yang sejajar dan sama panjang (atas sejajar bawah, kiri sejajar kanan)."
+                    },
+                    {
+                        q: "Trapesium sama kaki memiliki...",
+                        svg: `<svg width="150" height="80" viewBox="0 0 150 80"><polygon points="30,70 120,70 100,10 50,10" class="shape-stroke"/></svg>`,
+                        options: ["Sepasang sisi sejajar dan sepasang kaki sama panjang", "Dua pasang sisi sejajar", "4 sudut siku-siku", "Semua sisi sama panjang"],
+                        ans: 0,
+                        discussion: "Trapesium hanya punya sepasang sisi sejajar. Jika 'sama kaki', berarti sisi miring kiri dan kanannya sama panjang."
+                    },
+                    {
+                        q: "Jajargenjang yang memiliki 4 sudut siku-siku disebut...",
+                        options: ["Belah ketupat", "Layang-layang", "Persegi Panjang", "Trapesium"],
+                        ans: 2,
+                        discussion: "Persegi panjang pada dasarnya adalah jajargenjang yang 'ditegakkan' sehingga keempat sudutnya menjadi $90^\\circ$ (siku-siku)."
+                    },
+                    {
+                        q: "Perbedaan utama persegi dan persegi panjang terletak pada...",
+                        options: ["Jumlah sudut", "Besar sudut", "Panjang sisi-sisinya", "Jumlah sisi sejajar"],
+                        ans: 2,
+                        discussion: "Persegi memiliki 4 sisi yang **sama panjang**. Sedangkan persegi panjang, sisi yang berhadapan sama panjang, tapi panjang tidak sama dengan lebar."
+                    },
+                    {
+                        q: "Bangun datar yang memiliki 4 sisi sama panjang tetapi tidak memiliki sudut siku-siku adalah...",
+                        svg: `<svg width="100" height="100" viewBox="0 0 100 100"><polygon points="50,10 80,50 50,90 20,50" class="shape-stroke"/></svg>`,
+                        options: ["Persegi", "Persegi Panjang", "Belah Ketupat", "Trapesium"],
+                        ans: 2,
+                        discussion: "Ciri **Belah Ketupat**: 4 sisi sama panjang, sudut berhadapan sama besar (bukan siku-siku), diagonal saling tegak lurus."
+                    },
+                    { 
+                        q: "Jumlah simetri putar pada persegi panjang adalah...", 
+                        options: ["1", "2", "3", "4"], 
+                        ans: 1, 
+                        discussion: "Persegi panjang dapat menempati bingkainya dengan posisi awal ($360^\\circ$) dan posisi terbalik ($180^\\circ$). Jadi ada **2 simetri putar**." 
+                    },
+                    { 
+                        q: "Layang-layang memiliki ... pasang sisi yang sama panjang.", 
+                        options: ["1", "2", "3", "4"], 
+                        ans: 1, 
+                        discussion: "Layang-layang memiliki **dua pasang** sisi yang sama panjang. Sepasang yang pendek di atas, dan sepasang yang panjang di bawah." 
+                    },
+                    { 
+                        q: "Diagonal pada belah ketupat saling...", 
+                        options: ["Sejajar", "Berpotongan tegak lurus", "Sama panjang", "Tidak berpotongan"], 
+                        ans: 1, 
+                        discussion: "Salah satu sifat khas belah ketupat adalah kedua diagonalnya berpotongan membentuk sudut siku-siku (**tegak lurus**)." 
+                    },
+                    { 
+                        q: "Jumlah semua sudut pada bangun segiempat adalah...", 
+                        options: ["$180^\\circ$", "$270^\\circ$", "$360^\\circ$", "$540^\\circ$"], 
+                        ans: 2, 
+                        discussion: "Segiempat bisa dibagi menjadi 2 segitiga. $180^\\circ \\times 2 = 360^\\circ$. Semua segiempat jumlah sudutnya **$360^\\circ$**." 
+                    },
+                    { 
+                        q: "Trapesium yang memiliki satu sudut siku-siku disebut trapesium...", 
+                        options: ["Sama kaki", "Sembarang", "Siku-siku", "Tumpul"], 
+                        ans: 2, 
+                        discussion: "Sesuai namanya, trapesium yang memiliki sisi tegak lurus dengan alas (membentuk sudut $90^\\circ$) adalah **Trapesium Siku-siku**." 
+                    },
+                    // 11-20 fillers
+                    { 
+                        q: "Manakah pernyataan yang benar tentang diagonal persegi panjang?", 
+                        options: ["Saling tegak lurus", "Membagi sudut menjadi dua sama besar", "Sama panjang dan saling membagi dua", "Tidak sama panjang"], 
+                        ans: 2, 
+                        discussion: "Pada persegi panjang, kedua diagonalnya **sama panjang** dan titik potongnya membagi dua sama besar, tetapi tidak tegak lurus." 
+                    },
+                    { 
+                        q: "Sifat yang TIDAK dimiliki persegi adalah...", 
+                        options: ["Semua sisi sama panjang", "Semua sudut siku-siku", "Diagonal berpotongan tegak lurus", "Hanya memiliki 1 simetri lipat"], 
+                        ans: 3, 
+                        discussion: "Persegi adalah bangun paling sempurna. Ia memiliki **4 simetri lipat**, bukan 1." 
+                    },
+                    { 
+                        q: "Bangun datar yang memiliki tepat sepasang sisi sejajar adalah...", 
+                        options: ["Jajargenjang", "Trapesium", "Persegi", "Belah Ketupat"], 
+                        ans: 1, 
+                        discussion: "Definisi **Trapesium** adalah segiempat yang memiliki tepat sepasang sisi sejajar." 
+                    },
+                    { 
+                        q: "Simetri lipat pada layang-layang berjumlah...", 
+                        options: ["1", "2", "3", "4"], 
+                        ans: 0, 
+                        discussion: "Layang-layang hanya bisa dilipat secara vertikal (kiri ketemu kanan). Jadi hanya punya **1 simetri lipat**." 
+                    },
+                    { 
+                        q: "Keliling persegi dengan sisi 10 cm adalah...", 
+                        options: ["20 cm", "40 cm", "100 cm", "10 cm"], 
+                        ans: 1, 
+                        discussion: "Keliling persegi = $4 \\times sisi$. <br> Keliling = $4 \\times 10 = 40$ cm." 
+                    },
+                    { 
+                        q: "Sebuah belah ketupat memiliki panjang sisi 15 cm. Berapakah kelilingnya?", 
+                        options: ["30 cm", "45 cm", "60 cm", "50 cm"], 
+                        ans: 2, 
+                        discussion: "Belah ketupat memiliki 4 sisi yang sama panjang. <br> Keliling = $4 \\times 15 = 60$ cm." 
+                    },
+                    { 
+                        q: "Sudut yang berhadapan pada jajargenjang besarnya...", 
+                        options: ["Berbeda", "Sama", "Berjumlah $90^\\circ$", "Berjumlah $200^\\circ$"], 
+                        ans: 1, 
+                        discussion: "Sifat jajargenjang: sudut yang berhadapan **sama besar**, dan sudut yang berdekatan jumlahnya $180^\\circ$." 
+                    },
+                    { 
+                        q: "Manakah yang merupakan bangun segi banyak beraturan?", 
+                        options: ["Persegi Panjang", "Belah Ketupat", "Persegi", "Layang-layang"], 
+                        ans: 2, 
+                        discussion: "Segi banyak beraturan syaratnya: semua sisi sama panjang DAN semua sudut sama besar. Hanya **Persegi** yang memenuhi kedua syarat itu." 
+                    },
+                    { 
+                        q: "Segiempat yang kedua diagonalnya sama panjang adalah...", 
+                        options: ["Belah Ketupat", "Jajargenjang", "Persegi Panjang", "Layang-layang"], 
+                        ans: 2, 
+                        discussion: "Di antara pilihan tersebut, hanya **Persegi Panjang** (dan persegi) yang diagonalnya memiliki panjang yang sama." 
+                    },
+                    { 
+                        q: "Jika sebuah Jajargenjang memiliki sisi alas 8 cm dan sisi miring 5 cm, berapakah kelilingnya?", 
+                        options: ["13 cm", "26 cm", "40 cm", "20 cm"], 
+                        ans: 1, 
+                        discussion: "Keliling = $2 \\times (alas + miring)$. <br> Keliling = $2 \\times (8 + 5) = 2 \\times 13 = 26$ cm." 
+                    }
+                ]
+            },
+            3: {
+                title: "Paket 3: Campuran & HOTS",
+                questions: [
+                    {
+                        q: "Sebuah persegi dengan sisi 10 cm ditempelkan dengan segitiga sama sisi yang sisinya juga 10 cm (tepat di atas persegi). Berapakah keliling luar bangun gabungan tersebut?",
+                        svg: `<svg width="100" height="150" viewBox="0 0 100 150"><rect x="20" y="50" width="60" height="60" class="shape-stroke"/><polygon points="20,50 80,50 50,0" class="shape-stroke"/></svg>`,
+                        options: ["40 cm", "50 cm", "60 cm", "70 cm"],
+                        ans: 1, 
+                        discussion: "Keliling adalah garis luar. Bangun gabungan ini memiliki 5 sisi luar (3 sisi persegi + 2 sisi segitiga). <br> Keliling = $5 \\times 10$ cm = **50 cm**."
+                    },
+                    {
+                        q: "Aku adalah bangun datar. Aku punya 4 sisi. Sisiku yang berhadapan sejajar. Tapi aku tidak punya sudut siku-siku. Siapakah aku?",
+                        options: ["Persegi", "Persegi Panjang", "Jajargenjang", "Trapesium"],
+                        ans: 2,
+                        discussion: "Punya sisi sejajar tapi tidak siku-siku? Pilihannya Jajargenjang atau Belah Ketupat. Di opsi hanya ada **Jajargenjang**."
+                    },
+                    {
+                        q: "Dua buah segitiga siku-siku sama kaki yang identik jika dihimpitkan pada sisi miringnya akan membentuk bangun...",
+                        options: ["Persegi", "Persegi Panjang", "Trapesium", "Lingkaran"],
+                        ans: 0,
+                        discussion: "Dua segitiga siku-siku sama kaki jika digabung pada sisi miringnya akan membentuk **Persegi**."
+                    },
+                    {
+                        q: "Manakah pernyataan yang SALAH?",
+                        options: ["Semua persegi adalah persegi panjang", "Semua persegi panjang adalah persegi", "Semua belah ketupat adalah jajargenjang", "Semua persegi adalah belah ketupat"],
+                        ans: 1,
+                        discussion: "Persegi panjang belum tentu persegi (karena sisinya belum tentu sama panjang). Tapi semua persegi pasti memenuhi syarat persegi panjang."
+                    },
+                    {
+                        q: "Jika sebuah jam menunjukkan pukul 09.00, sudut terkecil yang terbentuk adalah...",
+                        svg: `<svg width="80" height="80" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="black" fill="none"/><line x1="50" y1="50" x2="50" y2="15" stroke="black" stroke-width="2"/><line x1="50" y1="50" x2="15" y2="50" stroke="black" stroke-width="2"/></svg>`,
+                        options: ["$45^\\circ$", "$60^\\circ$", "$90^\\circ$", "$180^\\circ$"],
+                        ans: 2,
+                        discussion: "Pukul 09.00 jarum pendek di 9, panjang di 12. Membentuk sudut tegak lurus atau **$90^\\circ$**."
+                    },
+                    // Filling to 20
+                    { 
+                        q: "Sudut $180^\\circ$ disebut juga sudut...", 
+                        options: ["Lurus", "Siku-siku", "Tumpul", "Lancip"], 
+                        ans: 0, 
+                        discussion: "Sudut yang membentuk garis lurus besarnya $180^\\circ$, maka disebut **Sudut Lurus**." 
+                    },
+                    { 
+                        q: "Berapa banyak diagonal yang dimiliki segilima?", 
+                        options: ["2", "3", "4", "5"], 
+                        ans: 3, 
+                        discussion: "Segilima memiliki **5 diagonal** yang membentuk pola bintang di dalamnya." 
+                    },
+                    { 
+                        q: "Jumlah sudut dalam segilima adalah...", 
+                        options: ["$360^\\circ$", "$540^\\circ$", "$720^\\circ$", "$180^\\circ$"], 
+                        ans: 1, 
+                        discussion: "Rumus jumlah sudut: $(n-2) \\times 180$. Untuk segilima (n=5): $(5-2) \\times 180 = 3 \\times 180 = 540^\\circ$." 
+                    },
+                    { 
+                        q: "Bangun datar yang tidak memiliki sudut adalah...", 
+                        options: ["Segitiga", "Lingkaran", "Persegi", "Trapesium"], 
+                        ans: 1, 
+                        discussion: "**Lingkaran** dibatasi oleh garis lengkung yang bertemu, sehingga tidak memiliki titik sudut." 
+                    },
+                    { 
+                        q: "Simetri putar lingkaran adalah...", 
+                        options: ["1", "4", "10", "Tak terhingga"], 
+                        ans: 3, 
+                        discussion: "Lingkaran bisa diputar sedikit apa pun dan akan tetap menempati bingkainya. Simetri putarnya **tak terhingga**." 
+                    },
+                    { 
+                        q: "Jika keliling persegi 48 cm, maka panjang sisinya...", 
+                        options: ["10 cm", "12 cm", "14 cm", "16 cm"], 
+                        ans: 1, 
+                        discussion: "Sisi persegi = Keliling : 4 <br> Sisi = 48 : 4 = **12 cm**." 
+                    },
+                    { 
+                        q: "Jika sebuah segitiga memiliki sisi 6 cm, 8 cm, dan 10 cm. Jenis segitiga apakah ini?", 
+                        options: ["Siku-siku", "Sama sisi", "Tumpul", "Lancip"], 
+                        ans: 0, 
+                        discussion: "Cek Tripel Phytagoras: $6^2 + 8^2 = 36 + 64 = 100$. <br> $10^2 = 100$. Karena sama, ini adalah **Segitiga Siku-siku**." 
+                    },
+                    { 
+                        q: "Manakah yang bukan ciri-ciri bangun datar?", 
+                        options: ["Memiliki volume", "Memiliki luas", "Memiliki keliling", "Dibatasi garis"], 
+                        ans: 0, 
+                        discussion: "Bangun datar hanya punya 2 dimensi (panjang & lebar). Yang punya volume adalah bangun ruang (3 dimensi)." 
+                    },
+                    { 
+                        q: "Bangun datar yang terbentuk dari 3 titik yang tidak segaris adalah...", 
+                        options: ["Garis", "Sudut", "Segitiga", "Lingkaran"], 
+                        ans: 2, 
+                        discussion: "Definisi **Segitiga** adalah bangun yang dibentuk dengan menghubungkan 3 titik yang tidak segaris." 
+                    },
+                    { 
+                        q: "Sudut antara arah Utara dan Timur adalah...", 
+                        options: ["$45^\\circ$", "$90^\\circ$", "$135^\\circ$", "$180^\\circ$"], 
+                        ans: 1, 
+                        discussion: "Dalam kompas, Utara ke Timur membentuk sudut siku-siku (**$90^\\circ$**)." 
+                    },
+                    { 
+                        q: "Segi banyak yang semua sisinya sama panjang dan semua sudutnya sama besar disebut...", 
+                        options: ["Segi banyak beraturan", "Segi banyak tidak beraturan", "Segi banyak cembung", "Segi banyak cekung"], 
+                        ans: 0, 
+                        discussion: "Ini adalah definisi dari **Segi banyak beraturan** (seperti persegi, segitiga sama sisi, segilima beraturan)." 
+                    },
+                    { 
+                        q: "Trapesium siku-siku memiliki sudut siku-siku sebanyak...", 
+                        options: ["1", "2", "3", "4"], 
+                        ans: 1, 
+                        discussion: "Trapesium siku-siku memiliki sisi tegak lurus yang memotong sisi atas dan bawah, sehingga terbentuk **2 sudut siku-siku**." 
+                    },
+                    { 
+                        q: "Bangun datar yang menyerupai ketupat adalah...", 
+                        options: ["Layang-layang", "Belah ketupat", "Persegi", "Jajargenjang"], 
+                        ans: 1, 
+                        discussion: "Sudah jelas dari namanya, bangun yang menyerupai ketupat adalah **Belah Ketupat**." 
+                    },
+                    { 
+                        q: "Apa nama sisi terpanjang pada segitiga siku-siku?", 
+                        options: ["Sisi tegak", "Sisi alas", "Hipotenusa", "Sisi miring"], 
+                        ans: 2, 
+                        discussion: "Sisi miring pada segitiga siku-siku yang terletak di depan sudut siku-siku disebut **Hipotenusa**." 
+                    },
+                    { 
+                        q: "Paket 3 Selesai! Pertanyaan terakhir: Jumlah sisi pada Hexagon adalah...", 
+                        options: ["5", "6", "7", "8"], 
+                        ans: 1, 
+                        discussion: "Hexa berarti enam. Jadi Hexagon adalah segienam (**6 sisi**)." 
+                    }
+                ]
+            }
+        };
+
+        // --- GAME LOGIC ---
+        let currentPacketId = 1;
+        let userAnswers = {}; // { qIndex: selectedOptionIndex }
+
+        function loadQuiz(packetId) {
+            currentPacketId = packetId;
+            userAnswers = {};
+            
+            // Hide Selector, Show Quiz
+            document.getElementById('packet-selector').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('packet-title').innerText = questionData[packetId].title;
+            document.getElementById('score-display').classList.add('hidden');
+            
+            // Render Questions
+            const form = document.getElementById('quiz-form');
+            form.innerHTML = '';
+            
+            const questions = questionData[packetId].questions;
+            
+            questions.forEach((q, index) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = "bg-white p-6 rounded-xl shadow-sm border border-gray-100 question-card";
+                qDiv.id = `q-card-${index}`;
+                
+                // SVG / Image
+                let svgHtml = q.svg ? `<div class="mb-4">${q.svg}</div>` : '';
+                
+                // Options HTML
+                let optionsHtml = '';
+                q.options.forEach((opt, optIndex) => {
+                    optionsHtml += `
+                        <div class="option-label border rounded-lg p-3 mb-2 flex items-center gap-3" 
+                             onclick="selectOption(${index}, ${optIndex})"
+                             id="opt-${index}-${optIndex}">
+                            <div class="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs font-bold option-circle">
+                                ${String.fromCharCode(65 + optIndex)}
+                            </div>
+                            <div class="text-gray-700 w-full">${opt}</div>
+                        </div>
+                    `;
+                });
+
+                qDiv.innerHTML = `
+                    <div class="flex gap-3 mb-2">
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">No. ${index + 1}</span>
+                    </div>
+                    ${svgHtml}
+                    <p class="text-gray-800 font-medium mb-4 text-lg">${q.q}</p>
+                    <div class="options-container">
+                        ${optionsHtml}
+                    </div>
+                    <div id="feedback-${index}" class="hidden mt-3 p-4 rounded text-sm border-l-4"></div>
+                `;
+                
+                form.appendChild(qDiv);
+            });
+
+            // Re-render Math Equations
+            renderMathInElement(form, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+            
+            // Reset Button State
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = "Cek Nilai";
+            btn.disabled = false;
+            btn.classList.remove('bg-gray-400');
+            btn.classList.add('bg-blue-600');
+        }
+
+        function selectOption(qIndex, optIndex) {
+            // Check if already submitted
+            if(document.getElementById('submit-btn').disabled) return;
+
+            // Update State
+            userAnswers[qIndex] = optIndex;
+            
+            // Update UI
+            const parent = document.getElementById(`q-card-${qIndex}`);
+            const options = parent.querySelectorAll('.option-label');
+            options.forEach(opt => {
+                opt.classList.remove('selected-option');
+                opt.querySelector('.option-circle').classList.remove('bg-blue-500', 'text-white', 'border-blue-500');
+            });
+
+            const selected = document.getElementById(`opt-${qIndex}-${optIndex}`);
+            selected.classList.add('selected-option');
+            selected.querySelector('.option-circle').classList.add('bg-blue-500', 'text-white', 'border-blue-500');
+        }
+
+        function submitQuiz() {
+            const questions = questionData[currentPacketId].questions;
+            let score = 0;
+            let answeredCount = Object.keys(userAnswers).length;
+
+            if (answeredCount < questions.length) {
+                if(!confirm(`Kamu baru menjawab ${answeredCount} dari ${questions.length} soal. Yakin ingin mengumpulkan?`)) return;
+            }
+
+            // Calculate Score & Show Feedback
+            questions.forEach((q, index) => {
+                const userAns = userAnswers[index];
+                const feedback = document.getElementById(`feedback-${index}`);
+                const card = document.getElementById(`q-card-${index}`);
+                
+                // Disable interactivity
+                card.style.pointerEvents = 'none';
+
+                let feedbackText = "";
+                let feedbackClass = "";
+
+                if (userAns === undefined) {
+                    // No answer
+                    feedbackClass = "bg-yellow-50 text-yellow-800 border-yellow-500 block";
+                    feedbackText = `<strong>Tidak dijawab.</strong> Jawaban benar: ${String.fromCharCode(65 + q.ans)}`;
+                } else if (userAns === q.ans) {
+                    // Correct
+                    score++;
+                    document.getElementById(`opt-${index}-${userAns}`).classList.add('correct-answer');
+                    feedbackClass = "bg-green-50 text-green-800 border-green-500 block";
+                    feedbackText = "<strong>✓ Benar!</strong>";
+                } else {
+                    // Wrong
+                    document.getElementById(`opt-${index}-${userAns}`).classList.add('wrong-answer');
+                    // Highlight correct one
+                    document.getElementById(`opt-${index}-${q.ans}`).classList.add('correct-answer');
+                    
+                    feedbackClass = "bg-red-50 text-red-800 border-red-500 block";
+                    feedbackText = `<strong>Salah.</strong> Jawaban benar: ${String.fromCharCode(65 + q.ans)}`;
+                }
+
+                // Append Discussion if available
+                if (q.discussion) {
+                    feedbackText += `<div class="mt-2 pt-2 border-t border-gray-200 text-gray-700"><strong>Pembahasan:</strong><br>${q.discussion}</div>`;
+                }
+
+                feedback.className = `hidden mt-3 p-4 rounded text-sm border-l-4 ${feedbackClass}`;
+                feedback.innerHTML = feedbackText;
+            });
+
+            // Re-render math in feedback blocks
+            renderMathInElement(document.getElementById('quiz-form'), {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+
+            // Final Score Calculation
+            const finalScore = (score / questions.length) * 100;
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Show Score in Header
+            const scoreDisplay = document.getElementById('score-display');
+            scoreDisplay.classList.remove('hidden');
+            document.getElementById('final-score').innerText = finalScore.toFixed(0);
+
+            // Disable Submit Button
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = "Selesai (Lihat Pembahasan)";
+            btn.disabled = true;
+            btn.classList.remove('bg-blue-600');
+            btn.classList.add('bg-gray-400');
+        }
+
+        function resetQuiz() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('packet-selector').classList.remove('hidden');
+            document.getElementById('score-display').classList.add('hidden');
+            window.scrollTo(0,0);
+        }
+    </script>
+</body>
+</html>
